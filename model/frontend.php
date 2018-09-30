@@ -31,13 +31,15 @@ function getComments($postId){
 //creeons une fonction pour la connexion
 
 function dbConnect(){
-      try
-    {
         $db = new PDO('mysql:host=localhost;dbname=test_blog;charset=utf8', 'root', '');
         return $db;
-    }
-    catch(Exception $e)
-    {
-        die('Erreur : '.$e->getMessage());
-    }
+}
+
+function postComment($postId,$author,$comment){
+
+    $db = dbConnect();
+    $comments = $db->prepare('INSERT INTO comments(post_id, author, comments, comment_date) VALUES(?, ?, ?, NOW())');
+    $affectedLines = $comments->execute(array($postId, $author, $comment));
+
+    return $affectedLines;
 }
